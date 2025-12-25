@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sai Clinic | Pharmacy</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>Sai Clinic | Digital Pharmacy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --clinic-teal: #00a99d;
             --clinic-navy: #003366;
-            --bg-color: #f8fafc;
+            --bg-color: #fcfcfc;
         }
 
         body {
@@ -20,8 +20,203 @@
             color: #1e293b;
         }
 
-        /* Clean Header Navigation */
-        header {
+        /* Top Left Profile Header */
+        .profile-header {
+            background: #ffffff;
+            padding: 10px 30px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .profile-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--clinic-teal);
+            object-fit: cover;
+            margin-right: 12px;
+        }
+
+        .profile-name {
+            font-weight: 700;
+            color: var(--clinic-navy);
+            font-size: 0.95rem;
+        }
+
+        /* Top Center Logo (Larger) */
+        .logo-section {
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px 20px 20px;
+        }
+
+        .main-logo {
+            width: 400px; /* Large professional size */
+            max-width: 85%;
+            height: auto;
+        }
+
+        /* Medicine Display */
+        .container {
+            max-width: 1100px;
+            margin: 30px auto 100px auto;
+            padding: 0 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .med-card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            border-top: 5px solid var(--clinic-teal);
+        }
+
+        /* INVISIBLE SECRET OPTION */
+        .secret-screw {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            color: var(--bg-color); /* Matches background exactly */
+            cursor: pointer;
+            font-size: 14px;
+            z-index: 9999;
+        }
+
+        .secret-screw:hover {
+            color: #f0f0f0; /* Faintly visible only on hover */
+        }
+
+        /* Admin Management Panel */
+        #adminPanel {
+            display: none;
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+            z-index: 10001;
+            width: 350px;
+            border: 1px solid #ddd;
+        }
+
+        #adminPanel input, #adminPanel textarea {
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--clinic-navy);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(3px);
+            z-index: 10000;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="profile-header">
+        <img src="https://raw.githubusercontent.com/krishnatejap76-arch/Dr.vinay-official-/main/IMG-20251223-WA0003.jpg" alt="Dr. Vinay" class="profile-img">
+        <span class="profile-name">Dr. Vinay Official</span>
+    </div>
+
+    <div class="logo-section">
+        <img src="https://raw.githubusercontent.com/krishnatejap76-arch/Dr.vinay-official-/main/image.png" alt="Sai Clinic Logo" class="main-logo">
+    </div>
+
+    <div class="container">
+        <h2 style="color: var(--clinic-navy); text-align: center; margin-bottom: 40px;">Available Medicine List</h2>
+        <div class="grid" id="medList">
+            </div>
+    </div>
+
+    <i class="fas fa-screwdriver-wrench secret-screw" onclick="verifyUser()"></i>
+
+    <div class="overlay" id="overlay" onclick="closeAdmin()"></div>
+
+    <div id="adminPanel">
+        <h3 style="margin-top:0; color: var(--clinic-navy);">Add New Entry</h3>
+        <input type="text" id="mName" placeholder="Medicine Name">
+        <textarea id="mDesc" rows="4" placeholder="Medicine Details"></textarea>
+        <button class="submit-btn" onclick="saveMed()">Add to Website</button>
+        <button onclick="localStorage.removeItem('sai_inventory'); location.reload();" style="margin-top:20px; background:none; border:none; color:red; cursor:pointer; width:100%; font-size:11px;">Reset Website Content</button>
+    </div>
+
+    <script>
+        window.onload = loadData;
+
+        function verifyUser() {
+            let code = prompt("Enter Secret Access Code:");
+            if (code === "dr.vinay official") {
+                document.getElementById('adminPanel').style.display = 'block';
+                document.getElementById('overlay').style.display = 'block';
+            } else {
+                alert("Incorrect Access Code.");
+            }
+        }
+
+        function closeAdmin() {
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        function saveMed() {
+            const name = document.getElementById('mName').value;
+            const desc = document.getElementById('mDesc').value;
+            if(name && desc) {
+                let items = JSON.parse(localStorage.getItem('sai_inventory') || '[]');
+                items.push({name, desc});
+                localStorage.setItem('sai_inventory', JSON.stringify(items));
+                document.getElementById('mName').value = '';
+                document.getElementById('mDesc').value = '';
+                closeAdmin();
+                loadData();
+            }
+        }
+
+        function loadData() {
+            const list = document.getElementById('medList');
+            let items = JSON.parse(localStorage.getItem('sai_inventory') || '[]');
+            if(items.length === 0) {
+                list.innerHTML = `<p style="grid-column: 1/-1; text-align:center; color:#999;">The medicine list is currently empty.</p>`;
+                return;
+            }
+            list.innerHTML = items.map(i => `
+                <div class="med-card">
+                    <h3>${i.name}</h3>
+                    <p>${i.desc}</p>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>
+header {
             background: #ffffff;
             height: 80px;
             display: flex;
