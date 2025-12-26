@@ -6,113 +6,107 @@
     <title>Dr. Vinay Official - Medical Store</title>
     <style>
         :root {
-            --screw-silver: #b0b0b0;
-            --screw-dark: #4a4a4a;
-            --accent-blue: #007bff;
+            --steel: #b0b0b0;
+            --dark-metal: #333;
+            --screw-slot: #444;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             margin: 0;
-            background-color: #f4f4f4;
+            background-color: #e9e9e9;
         }
 
-        /* Top Navigation Bar */
+        /* Header */
         header {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 10px 20px;
             background: #fff;
+            padding: 10px 20px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
         }
 
-        .profile-section {
+        /* SCREW THEMED SECRET OPTION */
+        .secret-screw {
+            width: 35px;
+            height: 35px;
+            background: radial-gradient(circle, #ddd, #888);
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
+            cursor: pointer;
+            border: 2px solid #666;
+            position: relative;
+            margin-right: 15px;
+            box-shadow: inset 2px 2px 5px rgba(255,255,255,0.5), 2px 2px 4px rgba(0,0,0,0.3);
         }
+
+        /* The 'X' slot on the screw head */
+        .secret-screw::before, .secret-screw::after {
+            content: "";
+            position: absolute;
+            background: var(--screw-slot);
+            border-radius: 2px;
+        }
+        .secret-screw::before { width: 4px; height: 20px; transform: rotate(45deg); }
+        .secret-screw::after { width: 4px; height: 20px; transform: rotate(-45deg); }
 
         .profile-img {
             width: 50px;
             height: 50px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid var(--screw-silver);
-        }
-
-        /* Secret Button - Hidden look */
-        #secret-access {
-            background: transparent;
-            border: none;
-            color: #eee; /* Faded so it's not obvious */
-            cursor: pointer;
-            font-size: 10px;
+            border: 1px solid #ccc;
         }
 
         .search-container {
             flex-grow: 1;
-            text-align: center;
             margin: 0 20px;
         }
 
-        #medicineSearch {
-            width: 60%;
-            padding: 10px;
-            border-radius: 20px;
-            border: 1px solid #ccc;
+        #searchInput {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 25px;
+            border: 1px solid #bbb;
+            outline: none;
         }
 
-        /* Center Logo Section */
-        .hero-logo {
+        /* Center Logo Sizing */
+        .main-logo-area {
             text-align: center;
-            padding: 20px;
-            background: white;
+            padding: 15px 0;
         }
 
         .company-logo {
-            max-width: 200px;
-            height: auto;
+            height: 70px;
+            width: auto;
         }
 
-        /* Medicine List Styling - Screw Theme */
-        .medicine-container {
-            max-width: 800px;
+        /* Vertical Medicine List - Screw Shaped */
+        .medicine-list {
+            max-width: 600px;
             margin: 20px auto;
-            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
         .medicine-row {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            background: linear-gradient(90deg, #e0e0e0, #ffffff);
-            margin-bottom: 15px;
+            justify-content: space-between;
+            background: linear-gradient(90deg, #d8d8d8 0%, #ffffff 15%);
             padding: 15px 25px;
-            border-radius: 10px;
-            border-left: 8px solid var(--screw-dark); /* Screw-like edge */
-            box-shadow: 3px 3px 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            border-left: 12px solid var(--dark-metal); /* The Screw Shank */
+            box-shadow: 4px 4px 0px #bbb;
             position: relative;
         }
 
-        /* Screw head decoration */
-        .medicine-row::before {
-            content: '+';
-            position: absolute;
-            left: -15px;
-            background: #888;
-            color: #444;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 18px;
-            font-weight: bold;
-            box-shadow: inset 1px 1px 2px #fff;
-        }
+        .med-info h3 { margin: 0; font-size: 1.1rem; color: #222; }
+        .med-info p { margin: 5px 0 0; color: #666; font-size: 0.9rem; }
 
         .buy-btn {
             background-color: #25D366;
@@ -120,22 +114,23 @@
             border: none;
             padding: 10px 20px;
             border-radius: 5px;
-            cursor: pointer;
             font-weight: bold;
+            cursor: pointer;
         }
 
-        /* Admin Modal */
-        #admin-panel {
+        /* Admin Panel */
+        #adminPanel {
             display: none;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             background: white;
-            padding: 30px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            padding: 25px;
+            border: 4px solid var(--dark-metal);
             z-index: 2000;
             border-radius: 10px;
+            width: 280px;
         }
 
         .overlay {
@@ -149,119 +144,90 @@
 </head>
 <body>
 
-<header>
-    <div class="profile-section">
-        <button id="secret-access" onclick="checkSecret()">⚙</button>
-        <img src="https://github.com/krishnatejap76-arch/Dr.vinay-official-/blob/main/IMG-20251223-WA0003.jpg?raw=true" alt="Dr Vinay" class="profile-img">
-    </div>
+    <header>
+        <div class="secret-screw" onclick="openAdmin()" title="Admin Access"></div>
+        
+        <img src="https://github.com/krishnatejap76-arch/Dr.vinay-official-/blob/main/IMG-20251223-WA0003.jpg?raw=true" class="profile-img" alt="Profile">
 
-    <div class="search-container">
-        <input type="text" id="medicineSearch" placeholder="Search medicine..." onkeyup="filterMedicine()">
-    </div>
-</header>
-
-<div class="hero-logo">
-    <img src="https://via.placeholder.com/150?text=COMPANY+LOGO" alt="Company Logo" class="company-logo">
-    <h1>Dr. Vinay Official Medicines</h1>
-</div>
-
-<div class="medicine-container" id="medList">
-    <div class="medicine-row">
-        <div>
-            <strong class="med-name">Paracetamol 500mg</strong>
-            <p style="margin:5px 0; font-size: 0.9em; color: #666;">Pain relief and fever.</p>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search for medicine..." onkeyup="search()">
         </div>
-        <button class="buy-btn" onclick="buyMedicine('Paracetamol 500mg')">Buy</button>
+    </header>
+
+    <div class="main-logo-area">
+        <img src="https://github.com/krishnatejap76-arch/Dr.vinay-official-/blob/main/image.png?raw=true" class="company-logo" alt="Company Logo">
     </div>
-    
-    <div class="medicine-row">
-        <div>
-            <strong class="med-name">Amoxicillin</strong>
-            <p style="margin:5px 0; font-size: 0.9em; color: #666;">Antibiotic treatment.</p>
+
+    <div class="medicine-list" id="medContainer">
+        <div class="medicine-row">
+            <div class="med-info">
+                <h3>Example Medicine</h3>
+                <p>Dosage: 500mg | Price: ₹150</p>
+            </div>
+            <button class="buy-btn" onclick="buy('Example Medicine')">Buy</button>
         </div>
-        <button class="buy-btn" onclick="buyMedicine('Amoxicillin')">Buy</button>
     </div>
-</div>
 
-<div class="overlay" id="overlay"></div>
-<div id="admin-panel">
-    <h3>Admin Control Panel</h3>
-    <input type="text" id="newMedName" placeholder="Medicine Name"><br><br>
-    <input type="text" id="newMedDesc" placeholder="Description"><br><br>
-    <button onclick="addMedicine()">Add to List</button>
-    <button onclick="closeAdmin()">Close</button>
-</div>
+    <div class="overlay" id="overlay" onclick="closeAdmin()"></div>
+    <div id="adminPanel">
+        <h2 style="margin-top:0;">Add Medicine</h2>
+        <input type="text" id="mName" placeholder="Name" style="width:100%; margin-bottom:10px; padding:8px;"><br>
+        <input type="text" id="mDetails" placeholder="Details/Price" style="width:100%; margin-bottom:15px; padding:8px;"><br>
+        <button onclick="addMed()" style="width:100%; padding:10px; background:#333; color:white; border:none; cursor:pointer;">Update List</button>
+    </div>
 
-<script>
-    const whatsappNumber = "+919966021974";
+    <script>
+        const phone = "+919966021974";
 
-    // 1. Secret Access Logic
-    function checkSecret() {
-        const code = prompt("Enter Secret Admin Code:");
-        if (code === "dr vinay official") {
-            document.getElementById('admin-panel').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-        } else {
-            alert("Unauthorized access!");
-        }
-    }
-
-    function closeAdmin() {
-        document.getElementById('admin-panel').style.display = 'none';
-        document.getElementById('overlay').style.display = 'none';
-    }
-
-    // 2. Add Medicine Logic
-    function addMedicine() {
-        const name = document.getElementById('newMedName').value;
-        const desc = document.getElementById('newMedDesc').value;
-
-        if(name && desc) {
-            const container = document.getElementById('medList');
-            const row = document.createElement('div');
-            row.className = 'medicine-row';
-            row.innerHTML = `
-                <div>
-                    <strong class="med-name">${name}</strong>
-                    <p style="margin:5px 0; font-size: 0.9em; color: #666;">${desc}</p>
-                </div>
-                <button class="buy-btn" onclick="buyMedicine('${name}')">Buy</button>
-            `;
-            container.appendChild(row);
-            closeAdmin();
-            alert("Medicine added successfully!");
-        }
-    }
-
-    // 3. Search Logic
-    function filterMedicine() {
-        const input = document.getElementById('medicineSearch').value.toUpperCase();
-        const rows = document.getElementsByClassName('medicine-row');
-
-        for (let i = 0; i < rows.length; i++) {
-            let name = rows[i].getElementsByClassName('med-name')[0].innerText;
-            if (name.toUpperCase().indexOf(input) > -1) {
-                rows[i].style.display = "";
+        function openAdmin() {
+            let code = prompt("Enter Secret Code:");
+            if (code === "dr vinay official") {
+                document.getElementById('adminPanel').style.display = 'block';
+                document.getElementById('overlay').style.display = 'block';
             } else {
-                rows[i].style.display = "none";
+                alert("Wrong Code!");
             }
         }
-    }
 
-    // 4. WhatsApp Integration
-    function buyMedicine(medName) {
-        const userName = prompt("Please enter your Full Name:");
-        const userAddress = prompt("Please enter your Delivery Address:");
-        
-        if (userName && userAddress) {
-            const message = `Hello Dr. Vinay, I want to buy:\n\n*Medicine:* ${medName}\n*Customer:* ${userName}\n*Address:* ${userAddress}`;
-            const encodedMessage = encodeURIComponent(message);
-            window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
-        } else {
-            alert("Name and Address are required to proceed.");
+        function closeAdmin() {
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
         }
-    }
-</script>
 
+        function addMed() {
+            let name = document.getElementById('mName').value;
+            let details = document.getElementById('mDetails').value;
+            if(name && details) {
+                let html = `
+                <div class="medicine-row">
+                    <div class="med-info">
+                        <h3>${name}</h3>
+                        <p>${details}</p>
+                    </div>
+                    <button class="buy-btn" onclick="buy('${name}')">Buy</button>
+                </div>`;
+                document.getElementById('medContainer').innerHTML += html;
+                closeAdmin();
+            }
+        }
+
+        function search() {
+            let filter = document.getElementById('searchInput').value.toUpperCase();
+            let rows = document.getElementsByClassName('medicine-row');
+            for (let i = 0; i < rows.length; i++) {
+                let name = rows[i].querySelector('h3').innerText;
+                rows[i].style.display = name.toUpperCase().indexOf(filter) > -1 ? "" : "none";
+            }
+        }
+
+        function buy(medName) {
+            let name = prompt("Enter Your Name:");
+            let addr = prompt("Enter Your Address:");
+            if(name && addr) {
+                let msg = encodeURIComponent(`Order Details:\nMedicine: ${medName}\nCustomer: ${name}\nAddress: ${addr}`);
+                window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
+            }
+        }
+    </script>
 </body>
 </html>
